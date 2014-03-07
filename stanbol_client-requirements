@@ -1,0 +1,6 @@
+Pygments==1.6
+argparse==1.2.1
+bpython==0.12
+requests==2.1.0
+-e hg+https://code.google.com/r/artashesaghajanyan-solrpy-atomic-updates/@44690a4a96ef937d2bce5ccb4cc71642f6018c79#egg=solrpy-dev
+wsgiref==0.1.2

@@ -1,0 +1,5 @@
+# OUT: Python shell history and tab completion are enabled.
+import spotlight
+ann=spotlight.annotate('http://spotlight.dbpedia.org/rest/annotate', 'Hugh Hefner')
+ann
+# OUT: [{u'similarityScore': 0.2675376236438751, u'surfaceForm': u'Hugh Hefner', u'support': 428, u'offset': 0, u'URI': u'http://dbpedia.org/resource/Hugh_Hefner', u'percentageOfSecondRank': -1.0, u'types': u'DBpedia:Person,Schema:Person,Freebase:/celebrities/celebrity,Freebase:/celebrities,Freebase:/military/military_person,Freebase:/military,Freebase:/film/producer,Freebase:/film,Freebase:/award/award_nominee,Freebase:/award,Freebase:/people/person,Freebase:/people,Freebase:/fictional_universe/fictional_character,Freebase:/fictional_universe,Freebase:/tv/tv_actor,Freebase:/tv,Freebase:/fictional_universe/person_in_fiction,Freebase:/tv/tv_program_creator,Freebase:/tv/tv_personality,Freebase:/film/film_subject,Freebase:/people/measured_person,Freebase:/film/film_character,Freebase:/organization/organization_founder,Freebase:/organization,Freebase:/film/actor,Freebase:/film/person_or_entity_appearing_in_film'}]
