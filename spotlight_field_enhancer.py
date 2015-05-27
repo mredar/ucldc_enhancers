@@ -1,6 +1,8 @@
 import pprint
+import time
 import spotlight
 from requests.exceptions import HTTPError as HTTPErrorRequests
+from requests.exceptions import ConnectionError
 ####annotations=spotlight.annotate('http://spotlight.dbpedia.org/rest/annotate', 'Hugh Hefner')
 ####pprint.pprint(annotations)
 ####print '\n\n'
@@ -18,6 +20,7 @@ URL_SOLR = os.environ.get('URL_SOLR', 'http://107.21.228.130:8080/solr/dc-collec
 
 solr_db = solr.Solr(URL_SOLR)
 query = '-entity_ss:[* TO *]'
+query = '-spotlighted_b:[* TO *]'
 #query = 'collection_name:"Calisphere - Santa Clara University: Digital Objects"'
 #query = 'collection_name:"Calisphere - The Ruth and Sherman Lee Institute of Japanese Art"'
 fq='-entity_ss:[* TO *]'
@@ -50,6 +53,13 @@ def main():
                 DOCS_RETRIEVED += 1
                 if doc.has_key('entity_ss'):
                     DOCS_PREVIOUSLY_ENHANCED +=1
+                    doc
+                    doc_up = {'id':doc['id'], 'spotlighted_b':{'update':'true'}}
+                    try:
+                        solr_db.add(doc_up)
+                    except SolrException, e:
+                        if not e.httpcode == 400:
+                            raise e
                     continue
                 if doc.has_key(FIELD_TO_ENHANCE):
                     for fvalue in doc[FIELD_TO_ENHANCE]:
@@ -66,6 +76,9 @@ def main():
                                 print "NUM:", str(DOCS_RETRIEVED), " EEEE->", str(e)
                                 print e.args, e.message
                                 raise e
+                        except ConnectionError, e:
+                            time.sleep(1800)
+                            continue
                         except HTTPError, e:
                             #TODO: logger
                             continue
@@ -76,7 +89,9 @@ def main():
                             entity_refs = get_entity_refs_from_annotations(annotations)
                             entities_recognized.extend(entity_refs)
                             for entity in entity_refs:
-                                doc_up = {'id':doc['id'], 'entity_ss':{'add':entity.replace('http://dbpedia.org/resource/', 'http://wikipedia.org/wiki/')}}
+                                doc_up = {'id':doc['id'],
+                                        'spotlighted_b':'true',
+                                        'entity_ss':{'add':entity.replace('http://dbpedia.org/resource/', 'http://wikipedia.org/wiki/')}}
                                 try:
                                     print 'TRY UPDATE', str(doc_up)
                                     solr_db.add(doc_up)
